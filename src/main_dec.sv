@@ -4,7 +4,7 @@ module main_dec(
     output logic       ALUSrc,
     output logic [1:0] ResultSrc,
     output logic       MemWrite,
-    output logic       Jump,
+    output logic [1:0] JumpType,
     output logic       Branch,
     output logic       RegWrite
 );
@@ -18,7 +18,7 @@ module main_dec(
                 ResultSrc = 2'b01;
                 ImmType = 3'b001;
                 Branch = '0;
-                Jump = '0;
+                JumpType = '0;
             end
             // sw instruction
             7'b0100011: begin
@@ -28,7 +28,7 @@ module main_dec(
                 ResultSrc = '0;
                 ImmType = 3'b010;
                 Branch = '0;
-                Jump = '0;
+                JumpType = '0;
             end
             // i-type instructions (addi, xori, ori, andi, slti)
             7'b0010011: begin
@@ -38,7 +38,7 @@ module main_dec(
                 ResultSrc = '0;
                 ImmType = 3'b001;
                 Branch = '0;
-                Jump = '0;
+                JumpType = '0;
             end
             // b-type instructions (beq, bne)
             7'b1100011: begin
@@ -48,7 +48,7 @@ module main_dec(
                 ResultSrc = '0;
                 ImmType = 3'b011;
                 Branch = '1;
-                Jump = '0;
+                JumpType = '0;
             end
             // r-type instructions (add, sub, xor, or, and, slt)
             7'b0110011: begin
@@ -58,7 +58,7 @@ module main_dec(
                 ResultSrc = '0;
                 ImmType = '0;
                 Branch = '0;
-                Jump = '0;
+                JumpType = '0;
             end
             // jal instruction
             7'b1101111: begin
@@ -68,7 +68,7 @@ module main_dec(
                 ALUSrc = '1;
                 ImmType = 3'b100;
                 Branch = '0;
-                Jump = '1;
+                JumpType = 2'b01;
             end
             // jalr instruction
             7'b1100111: begin
@@ -78,7 +78,7 @@ module main_dec(
                 ALUSrc = '1;
                 ImmType = 3'b001;
                 Branch = '0;
-                Jump = '1;
+                JumpType = 2'b10;
             end
             default: begin
                 RegWrite = '0;
@@ -87,7 +87,7 @@ module main_dec(
                 ALUSrc = '0;
                 ImmType = '0;
                 Branch = '0;
-                Jump = '0;
+                JumpType = '0;
             end
         endcase
 endmodule
