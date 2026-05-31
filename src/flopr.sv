@@ -1,10 +1,13 @@
-module flopr(
+module flopr 
+#(
+    parameter width=32
+) (
     input  logic        clk,
     input  logic        reset,
-    input  logic [31:0] d,
-    output logic [31:0] q
+    input  logic [width-1:0] d,
+    output logic [width-1:0] q
 );
     always_ff @(posedge clk, posedge reset)
-        if (reset) q <= {32{1'b0}};
+        if (reset) q <= '0;
         else       q <= d;
 endmodule
