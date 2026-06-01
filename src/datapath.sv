@@ -3,14 +3,20 @@ module datapath(
     input  logic        reset,
     input  logic [31:0] instrF,
     input  logic [31:0] ReadDataM,
-    input  logic        RegWrite,
-    input  logic [2:0]  ImmType,
-    input  logic        ALUSrc,
-    input  logic [2:0]  ALUControl,
-    input  logic [1:0]  ResultSrc,
+    input  logic        RegWriteD,
+    input  logic [2:0]  ImmTypeD,
+    input  logic        ALUSrcD,
+    input  logic [2:0]  ALUControlD,
+    input  logic [1:0]  ResultSrcD,
     input  logic [1:0]  PCSrc,
+    input  logic        MemWriteD,
     input  logic [1:0]  FrwdAE,
     input  logic [1:0]  FrwdBE,
+    input  logic        BranchD,
+    input  logic [1:0]  JumpTypeD,
+    output logic [2:0]  funct3,
+    output logic        BranchE,
+    output logic [1:0]  JumpTypeE,
     output logic [4:0]  RdM,
     output logic [4:0]  WriteBackW,
     output logic [31:0] PCF,
@@ -18,6 +24,7 @@ module datapath(
     output logic [4:0]  Rs1E,
     output logic [4:0]  Rs2E,
     output logic [31:0] ALUResultM,
+    output logic        MemWriteM,
     output logic        Zero
 );
     // Fetch variables
@@ -58,7 +65,17 @@ module datapath(
     logic [31:0] ReadDataW;
     logic [31:0] PCPlus4W;
 
-    // Write back variables
+    // Control signal variables
+    logic       RegWriteE;
+    logic       RegWriteM;
+    logic       RegWriteW;
+    logic [3:0] funct3E;
+    logic [1:0] ResultSrcE;
+    logic [1:0] ResultSrcM;
+    logic [1:0] ResultSrcW;
+    logic       MemWriteE;
+    logic [2:0] ALUControlE;
+    logic       ALUSrcE;
 
     // Fetch
     mux3 #(.width(32)) pcmux (
@@ -111,14 +128,14 @@ module datapath(
         .a2(instrD[24:20]),
         .a3(WriteBackW),
         .wd3(ResultW),
-        .we3(RegWrite),
+        .we3(RegWriteW),
         .rd1(RD1D),
         .rd2(RD2D)
     );
 
     extend ext (
         .instr(instrD[31:7]),
-        .immtype(ImmType),
+        .immtype(ImmTypeD),
         .immext(ImmExtD)
     );
 
@@ -199,14 +216,14 @@ module datapath(
     mux2 #(.width(32)) alusrcmux (
         .d0(ALUSrcA),
         .d1(ImmExtE),
-        .s(ALUSrc),
+        .s(ALUSrcE),
         .y(SrcB)
     );
 
     alu mainALU (
         .SrcA,
         .SrcB,
-        .ALUControl,
+        .ALUControl(ALUControlE),
         .Zero,
         .ALUResult(ALUResultE)
     );
@@ -280,7 +297,99 @@ module datapath(
         .d0(ALUResultW),
         .d1(ReadDataW),
         .d2(PCPlus4W),
-        .s(ResultSrc),
+        .s(ResultSrcW),
         .y(ResultW)
+    );
+
+    // Control signals
+    flopr #(.width(1)) RegWriteDE (
+        .clk,
+        .reset,
+        .d(RegWriteD),
+        .q(RegWriteE)
+    );
+
+    flopr #(.width(1)) RegWriteEM (
+        .clk,
+        .reset,
+        .d(RegWriteE),
+        .q(RegWriteM)
+    );
+
+    flopr #(.width(1)) RegWriteMW (
+        .clk,
+        .reset,
+        .d(RegWriteM),
+        .q(RegWriteW)
+    );
+
+    flopr #(.width(3)) funct3reg (
+        .clk,
+        .reset,
+        .d(instrD[14:12]),
+        .q(funct3)
+    );
+
+    flopr #(.width(1)) BranchDE (
+        .clk,
+        .reset,
+        .d(BranchD),
+        .q(BranchE)
+    );
+
+    flopr #(.width(2)) JumpTypeDE (
+        .clk,
+        .reset,
+        .d(JumpTypeD),
+        .q(JumpTypeE)
+    );
+
+    flopr #(.width(2)) ResultSrcDE (
+        .clk,
+        .reset,
+        .d(ResultSrcD),
+        .q(ResultSrcE)
+    );
+
+    flopr #(.width(2)) ResultSrcEM (
+        .clk,
+        .reset,
+        .d(ResultSrcE),
+        .q(ResultSrcM)
+    );
+
+    flopr #(.width(2)) ResultSrcMW (
+        .clk,
+        .reset,
+        .d(ResultSrcM),
+        .q(ResultSrcW)
+    );
+
+    flopr #(.width(1)) MemWriteDE (
+        .clk,
+        .reset,
+        .d(MemWriteD),
+        .q(MemWriteE)
+    );
+
+    flopr #(.width(1)) MemWriteEM (
+        .clk,
+        .reset,
+        .d(MemWriteE),
+        .q(MemWriteM)
+    );
+
+    flopr #(.width(3)) ALUControlDE (
+        .clk,
+        .reset,
+        .d(ALUControlD),
+        .q(ALUControlE)
+    );
+
+    flopr #(.width(1)) ALUSrcDE (
+        .clk,
+        .reset,
+        .d(ALUSrcD),
+        .q(ALUSrcE)
     );
 endmodule
