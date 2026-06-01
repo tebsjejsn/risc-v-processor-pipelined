@@ -25,6 +25,7 @@ module riscvpipelined(
     logic [4:0]  RdM;
     logic        RegWriteM;
     logic        RegWriteW;
+    logic [4:0]  WriteBackW;
     logic [4:0]  Rs1E;
     logic [4:0]  Rs2E;
     logic        MemWriteM;

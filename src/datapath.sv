@@ -23,7 +23,7 @@ module datapath(
     output logic [31:0] PCF,
     output logic [31:0] WriteDataM,
     output logic        RegWriteM,
-    output logic        RegwriteW,
+    output logic        RegWriteW,
     output logic [4:0]  Rs1E,
     output logic [4:0]  Rs2E,
     output logic [31:0] ALUResultM,
@@ -69,7 +69,7 @@ module datapath(
 
     // Control signal variables
     logic       RegWriteE;
-    logic [3:0] funct3E;
+    logic [2:0] funct3E;
     logic [1:0] ResultSrcE;
     logic [1:0] ResultSrcM;
     logic [1:0] ResultSrcW;
