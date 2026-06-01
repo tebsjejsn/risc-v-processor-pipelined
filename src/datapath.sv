@@ -14,6 +14,7 @@ module datapath(
     input  logic [1:0]  FrwdBE,
     input  logic        BranchD,
     input  logic [1:0]  JumpTypeD,
+    output logic [31:0] instrD,
     output logic [2:0]  funct3,
     output logic        BranchE,
     output logic [1:0]  JumpTypeE,
@@ -21,6 +22,8 @@ module datapath(
     output logic [4:0]  WriteBackW,
     output logic [31:0] PCF,
     output logic [31:0] WriteDataM,
+    output logic        RegWriteM,
+    output logic        RegwriteW,
     output logic [4:0]  Rs1E,
     output logic [4:0]  Rs2E,
     output logic [31:0] ALUResultM,
@@ -33,7 +36,6 @@ module datapath(
     logic [31:0] PCNext;
     
     // Fetch to decode variables
-    logic [31:0] instrD;
     logic [31:0] PCD;
     logic [31:0] PCPlus4D;
 
@@ -67,8 +69,6 @@ module datapath(
 
     // Control signal variables
     logic       RegWriteE;
-    logic       RegWriteM;
-    logic       RegWriteW;
     logic [3:0] funct3E;
     logic [1:0] ResultSrcE;
     logic [1:0] ResultSrcM;
