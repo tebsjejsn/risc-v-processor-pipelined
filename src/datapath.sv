@@ -14,6 +14,10 @@ module datapath(
     input  logic [1:0]  FrwdBE,
     input  logic        BranchD,
     input  logic [1:0]  JumpTypeD,
+    input  logic        StallF,
+    input  logic        StallD,
+    input  logic        FlushE,
+    input  logic        FlushD,
     output logic [31:0] instrD,
     output logic [2:0]  funct3,
     output logic        BranchE,
@@ -28,12 +32,15 @@ module datapath(
     output logic [4:0]  Rs2E,
     output logic [31:0] ALUResultM,
     output logic        MemWriteM,
-    output logic        Zero
+    output logic [1:0]  ResultSrcE,
+    output logic [4:0]  RdE,
+    output logic        Zero,
 );
     // Fetch variables
     logic [31:0] PCPlus4F;
     logic [31:0] PCTargetE;
     logic [31:0] PCNext;
+    logic        StallF;
     
     // Fetch to decode variables
     logic [31:0] PCD;
@@ -44,11 +51,11 @@ module datapath(
     logic [31:0] RD1D;
     logic [31:0] RD2D;
     logic [31:0] ImmExtD;
+    logic        StallD;
 
     // Decode to execute variables
     logic [31:0] RD1E;
     logic [31:0] RD2E;
-    logic [4:0]  RdE;
     logic [31:0] PCE;
     logic [31:0] ImmExtE;
     logic [31:0] PCPlus4E;
@@ -58,6 +65,7 @@ module datapath(
     logic [31:0] ALUSrcA;
     logic [31:0] SrcB;
     logic [31:0] ALUResultE;
+    logic        FlushE;
 
     // Execute to memory variables
     logic [31:0] PCPlus4M;
@@ -70,7 +78,6 @@ module datapath(
     // Control signal variables
     logic       RegWriteE;
     logic [2:0] funct3E;
-    logic [1:0] ResultSrcE;
     logic [1:0] ResultSrcM;
     logic [1:0] ResultSrcW;
     logic       MemWriteE;
@@ -86,9 +93,10 @@ module datapath(
         .y(PCNext)
     );
 
-    flopr pcreg (
+    flopre pcreg (
         .clk,
         .reset,
+        .en(StallF),
         .d(PCNext),
         .q(PCF)
     );
@@ -100,23 +108,29 @@ module datapath(
     );
 
     // Fetch to decode registers
-    flopr instrFD (
+    floprce instrFD (
         .clk,
         .reset,
+        .en(StallD),
+        .clr(FlushD),
         .d(instrF),
         .q(instrD)
     );
 
-    flopr PCFD (
+    floprce PCFD (
         .clk,
         .reset,
+        .en(StallD),
+        .clr(FlushD),
         .d(PCF),
         .q(PCD)
     );
 
-    flopr PCPlus4FD (
+    floprce PCPlus4FD (
         .clk,
         .reset,
+        .en(StallD),
+        .clr(FlushD),
         .d(PCPlus4F),
         .q(PCPlus4D)
     );
@@ -140,58 +154,66 @@ module datapath(
     );
 
     // Decode to execute registers
-    flopr RD1DE (
+    floprc RD1DE (
         .clk,
         .reset,
+        .clr(FlushE),
         .d(RD1D),
         .q(RD1E)
     );
 
-    flopr RD2DE (
+    floprc RD2DE (
         .clk,
         .reset,
+        .clr(FlushE),
         .d(RD2D),
         .q(RD2E)
     );
 
-    flopr #(.width(5)) RdDE (
+    floprc #(.width(5)) RdDE (
         .clk,
         .reset,
+        .clr(FlushE),
         .d(instrD[11:7]),
         .q(RdE)
     );
 
-    flopr PCDE (
+    floprc PCDE (
         .clk,
         .reset,
+        .clr(FlushE),
         .d(PCD),
         .q(PCE)
     );
 
-    flopr ImmExtDE (
+    floprc ImmExtDE (
         .clk,
         .reset,
+        .clr(FlushE),
         .d(ImmExtD),
         .q(ImmExtE)
     );
 
-    flopr PCPlus4DE (
+    floprc PCPlus4DE (
         .clk,
         .reset,
+        .clr(FlushE),
         .d(PCPlus4D),
         .q(PCPlus4E)
     );
 
-    flopr #(.width(5)) Rs1DE (
+    floprc #(.width(5)) Rs1DE (
         .clk,
         .reset,
+        .clr(FlushE),
         .d(instrD[19:15]),
         .q(Rs1E)
     );
 
-    flopr #(.width(5)) Rs2DE (
+    floprc #(.width(5)) Rs2DE (
         .clk,
         .reset,
+        .clr(FlushE),
         .d(instrD[24:20]),
         .q(Rs2E)
     );

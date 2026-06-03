@@ -29,6 +29,12 @@ module riscvpipelined(
     logic [4:0]  Rs1E;
     logic [4:0]  Rs2E;
     logic        MemWriteM;
+    logic        StallF;
+    logic        StallD;
+    logic        FlushD;
+    logic        FlushE;
+    logic [1:0]  ResultSrcE;
+    logic [4:0]  RdE;
     logic        Zero;
 
     datapath dp (
@@ -46,6 +52,10 @@ module riscvpipelined(
         .FrwdBE,
         .BranchD,
         .JumpTypeD,
+        .StalLF,
+        .StallD,
+        .FlushD,
+        .FlushE,
         .instrD,
         .funct3,
         .BranchE,
@@ -60,6 +70,8 @@ module riscvpipelined(
         .Rs2E,
         .ALUResultM,
         .MemWriteM,
+        .ResultSrcE,
+        .RdE,
         .Zero
     );
 
@@ -96,7 +108,16 @@ module riscvpipelined(
         .WriteBackW,
         .RegWriteM,
         .RegWriteW,
+        .Rs1D(instrD[19:15]),
+        .Rs2D(instrD[24:20]),
+        .RdE,
+        .ResultSrcE,
+        .PCSrc,
         .FrwdAE,
-        .FrwdBE
+        .FrwdBE,
+        .StallF,
+        .StallD,
+        .FlushE,
+        .FlushD
     );
 endmodule
