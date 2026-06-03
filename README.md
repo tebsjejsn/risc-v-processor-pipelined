@@ -1,6 +1,6 @@
 # Pipelined RISC-V Processor
 
-A 5-stage pipelined processor implemented in SystemVerilog, capable of executing RV32I programs. The processor consists of three main components: a datapath (divided into fetch, decode, execute, memory, and writeback stages), a control unit, and a hazard unit (capable of forwarding and stalling).
+A 5-stage pipelined processor implemented in SystemVerilog, capable of executing RV32I programs. The processor consists of three main components: a datapath (divided into fetch, decode, execute, memory, and writeback stages), a control unit, and a hazard unit (capable of forwarding, stalling, and control logic).
 
 ## Datapath Diagram
 ![Datapath Diagram](images/datapath.jpeg)
