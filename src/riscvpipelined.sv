@@ -5,7 +5,9 @@ module riscvpipelined(
     input  logic [31:0] ReadDataM,
     output logic [31:0] ALUResultM,
     output logic [31:0] WriteDataM,
-    output logic [31:0] PCF
+    output logic [31:0] PCF,
+    output logic        MemWriteM,
+    output logic        RegWriteW
 );
     logic        RegWriteD;
     logic [2:0]  ImmTypeD;
@@ -24,11 +26,9 @@ module riscvpipelined(
     logic [1:0]  JumpTypeE;
     logic [4:0]  RdM;
     logic        RegWriteM;
-    logic        RegWriteW;
     logic [4:0]  WriteBackW;
     logic [4:0]  Rs1E;
     logic [4:0]  Rs2E;
-    logic        MemWriteM;
     logic        StallF;
     logic        StallD;
     logic        FlushD;
