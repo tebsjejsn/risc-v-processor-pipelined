@@ -1,6 +1,6 @@
 module flopre
 #(
-    parameter width=32;
+    parameter width=32
 ) (
     input  logic             clk,
     input  logic             reset,
@@ -10,6 +10,6 @@ module flopre
 );
     always_ff @(posedge clk, posedge reset) begin
         if (reset)       q <= '0;
-        else if (enable) q <= d;
+        else if (en) q <= d;
     end
 endmodule

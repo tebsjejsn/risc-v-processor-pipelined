@@ -34,7 +34,7 @@ module datapath(
     output logic        MemWriteM,
     output logic [1:0]  ResultSrcE,
     output logic [4:0]  RdE,
-    output logic        Zero,
+    output logic        Zero
 );
     // Fetch variables
     logic [31:0] PCPlus4F;

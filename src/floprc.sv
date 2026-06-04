@@ -1,6 +1,6 @@
 module floprc
 #(
-    parameter width=32;
+    parameter width=32
 ) (
     input  logic             clk,
     input  logic             reset,
@@ -8,7 +8,7 @@ module floprc
     input  logic [width-1:0] d,
     output logic [width-1:0] q
 );
-    always_ff begin
+    always_ff @(posedge clk, posedge reset) begin
         if (reset)    q <= '0;
         else if (clr) q <= '0;
         else          q <= d;
