@@ -6,7 +6,7 @@ A 5-stage pipelined processor implemented in SystemVerilog, capable of executing
 ![Datapath Diagram](images/datapath.jpeg)
 
 ## Instruction Set
-There are 17 unique instructions that the processor can execute. Any RV32I program can be executed with the processor using a combination of these instructions. 
+There are 17 unique instructions that the processor can execute. This combination of instructions forms a turing complete instruction set.
 
 |  Type  |              Instructions             |
 |--------|---------------------------------------|
