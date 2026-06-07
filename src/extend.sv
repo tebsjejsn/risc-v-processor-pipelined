@@ -5,6 +5,7 @@ module extend(
 );
     logic [11:0] imm12;
     logic [12:0] imm13;
+    logic [19:0] imm20;
     logic [20:0] imm21;
 
     always_comb
@@ -25,6 +26,10 @@ module extend(
             3'b100: begin
                 imm21 = {instr[31], instr[19:12], instr[20], instr[30:21], 1'b0};
                 immext = {{11{instr[31]}}, imm21};
+            end
+            3'b101: begin
+                imm20 = instr[31:12];
+                immext = {imm20, 12'd0};
             end
             default: immext = {32{1'b0}};
         endcase

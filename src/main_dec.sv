@@ -80,6 +80,16 @@ module main_dec(
                 Branch = '0;
                 JumpType = 2'b10;
             end
+            // lui instruction
+            7'b0110111: begin
+                RegWrite = '1;
+                MemWrite = '0;
+                ResultSrc = 2'b00;
+                ALUSrc = '1;
+                ImmType = 3'b101;
+                Branch = '0;
+                JumpType = '0;
+            end
             default: begin
                 RegWrite = '0;
                 MemWrite = '0;

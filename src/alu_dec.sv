@@ -56,6 +56,8 @@ module alu_dec(
                 7'b1101111: ALUControl = 3'b000;
                 // jalr
                 7'b1100111: ALUControl = 3'b000;
+                // lui
+                7'b0110111: ALUControl = 3'b101;
                 default: ALUControl = 3'b000;
             endcase
         end 

@@ -24,6 +24,8 @@ module alu(
                 end
                 3'b100: 
                     ALUResult = SrcA ^ SrcB;
+                3'b101:
+                    ALUResult = SrcB;
                 3'b110: 
                     ALUResult = SrcA | SrcB;
                 3'b111: 

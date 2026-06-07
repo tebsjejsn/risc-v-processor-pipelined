@@ -88,7 +88,7 @@ module datapath(
     mux3 #(.width(32)) pcmux (
         .d0(PCPlus4F),
         .d1(PCTargetE),
-        .d2(ALUResultM),
+        .d2(ALUResultE),
         .s(PCSrc),
         .y(PCNext)
     );
@@ -153,7 +153,6 @@ module datapath(
         .immext(ImmExtD)
     );
 
-    // Decode to execute registers
     floprc RD1DE (
         .clk,
         .reset,
@@ -267,7 +266,7 @@ module datapath(
     flopr WriteDataEM (
         .clk,
         .reset,
-        .d(RD2E),
+        .d(ALUSrcA),
         .q(WriteDataM)
     );
 
