@@ -6,7 +6,7 @@ A 5-stage pipelined processor implemented in SystemVerilog, capable of executing
 ![Datapath Diagram](images/datapath.jpeg)
 
 ## Instruction Set
-There are 17 unique instructions that the processor can execute. This combination of instructions forms a turing complete instruction set.
+There are 18 unique instructions that the processor can execute. This combination of instructions forms a turing complete instruction set.
 
 |  Type  |              Instructions             |
 |--------|---------------------------------------|
@@ -15,6 +15,7 @@ There are 17 unique instructions that the processor can execute. This combinatio
 | S-type | SW                                    |
 | B-type | BEQ, BNE                              |
 | J-type | JAL                                   |
+| U-type | LUI                                   |
 
 ## Installation
 
