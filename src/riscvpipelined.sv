@@ -7,7 +7,10 @@ module riscvpipelined(
     output logic [31:0] WriteDataM,
     output logic [31:0] PCF,
     output logic        MemWriteM,
-    output logic        RegWriteW
+    output logic        RegWriteW,
+    output logic [31:0] ResultW,
+    output logic [31:0] PCW,
+    output logic [4:0]  WriteBackW
 );
     logic        RegWriteD;
     logic [2:0]  ImmTypeD;
@@ -26,7 +29,6 @@ module riscvpipelined(
     logic [1:0]  JumpTypeE;
     logic [4:0]  RdM;
     logic        RegWriteM;
-    logic [4:0]  WriteBackW;
     logic [4:0]  Rs1E;
     logic [4:0]  Rs2E;
     logic        StallF;
@@ -73,6 +75,8 @@ module riscvpipelined(
         .MemWriteM,
         .ResultSrcE,
         .RdE,
+        .ResultW,
+        .PCW,
         .Zero
     );
 

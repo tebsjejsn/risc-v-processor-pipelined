@@ -34,6 +34,8 @@ module datapath(
     output logic        MemWriteM,
     output logic [1:0]  ResultSrcE,
     output logic [4:0]  RdE,
+    output logic [31:0] ResultW,
+    output logic [31:0] PCW,
     output logic        Zero
 );
     // Fetch variables
@@ -47,7 +49,6 @@ module datapath(
     logic [31:0] PCPlus4D;
 
     // Decode variables
-    logic [31:0] ResultW;
     logic [31:0] RD1D;
     logic [31:0] RD2D;
     logic [31:0] ImmExtD;
@@ -69,6 +70,7 @@ module datapath(
 
     // Execute to memory variables
     logic [31:0] PCPlus4M;
+    logic [31:0] PCM;
 
     // Memory to write back variables
     logic [31:0] ALUResultW;
@@ -284,6 +286,13 @@ module datapath(
         .q(PCPlus4M)
     );
 
+    flopr PCEM (
+        .clk,
+        .reset,
+        .d(PCE),
+        .q(PCM)
+    );
+
     // Memory to write back registers
     flopr ALUResultMW (
         .clk,
@@ -311,6 +320,13 @@ module datapath(
         .reset,
         .d(RdM),
         .q(WriteBackW)
+    );
+
+    flopr PCMW (
+        .clk,
+        .reset,
+        .d(PCM),
+        .q(PCW)
     );
 
     // Write back

@@ -4,11 +4,14 @@ module top(
     output logic [31:0] WriteData,
     output logic [31:0] dataAdr,
     output logic        MemWrite,
-    output logic        RegWrite
+    output logic        RegWrite,
+    output logic [31:0] PCW,
+    output logic [31:0] Result,
+    output logic [4:0]  Rd
 );
     logic [31:0] instr;
     logic [31:0] ReadData;
-    logic [31:0] PC;
+    logic [31:0] PCF;
 
     riscvpipelined riscv (
         .clk,
@@ -17,13 +20,16 @@ module top(
         .ReadDataM(ReadData),
         .ALUResultM(dataAdr),
         .WriteDataM(WriteData),
-        .PCF(PC),
+        .PCF,
         .MemWriteM(MemWrite),
-        .RegWriteW(RegWrite)
+        .RegWriteW(RegWrite),
+        .WriteBackW(Rd),
+        .ResultW(Result),
+        .PCW
     );
 
     imem imem1 (
-        .A(PC),
+        .A(PCF),
         .rd(instr)
     );
 
