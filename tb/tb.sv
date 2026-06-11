@@ -34,7 +34,7 @@ module tb();
     initial
         begin
             // Open commit log file
-            trace_file = $fopen("hardware_trace.log", "w");
+            trace_file = $fopen("data/hardware_trace.log", "w");
 
             // Initialize clock and reset signals
             clk = 0;
