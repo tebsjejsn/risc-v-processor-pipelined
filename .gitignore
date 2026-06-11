@@ -24,3 +24,8 @@ modelsim.ini
 # Temporary and lock files
 *.lock
 *~
+
+# Extra
+*.bin
+*.elf
+*.hex
