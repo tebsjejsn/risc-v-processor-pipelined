@@ -42,7 +42,6 @@ module datapath(
     logic [31:0] PCPlus4F;
     logic [31:0] PCTargetE;
     logic [31:0] PCNext;
-    logic        StallF;
     
     // Fetch to decode variables
     logic [31:0] PCD;
@@ -52,7 +51,6 @@ module datapath(
     logic [31:0] RD1D;
     logic [31:0] RD2D;
     logic [31:0] ImmExtD;
-    logic        StallD;
 
     // Decode to execute variables
     logic [31:0] RD1E;
@@ -66,7 +64,6 @@ module datapath(
     logic [31:0] ALUSrcA;
     logic [31:0] SrcB;
     logic [31:0] ALUResultE;
-    logic        FlushE;
 
     // Execute to memory variables
     logic [31:0] PCPlus4M;

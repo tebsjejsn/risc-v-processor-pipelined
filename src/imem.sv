@@ -6,7 +6,7 @@ module imem(
     ramtype mem;
 
     // add appropriate text file
-    initial $readmemh("C:/Users/tejpa/risc-v-processor-single-sv/instructions/test.hex", mem);
+    initial $readmemh("C:/Users/tejpa/risc-v-processor-pipelined/instructions/test.hex", mem);
 
     assign rd = mem[A[31:2]];
 endmodule
