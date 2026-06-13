@@ -19,11 +19,15 @@ module regfile(
         begin
             if (a1 == 0)
                 rd1 = '0;
+            else if ((a1 == a3) && we3)
+                rd1 = wd3;              
             else
                 rd1 = mem[a1];
 
             if (a2 == 0)
                 rd2 = '0;
+            else if ((a2 == a3) && we3)
+                rd2 = wd3;              
             else
                 rd2 = mem[a2];
         end
