@@ -27,7 +27,7 @@ module tb();
     // Clock generation
     always
         begin
-            #5;
+            #10;
             clk = ~clk;
         end
 
@@ -39,10 +39,10 @@ module tb();
             // Initialize clock and reset signals
             clk = 0;
             reset = 1;
-            #30;
+            #50;
             reset = 0;
 
-            #3000;
+            #10000;
             $fclose(trace_file);
             $finish;
         end
