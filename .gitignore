@@ -29,3 +29,4 @@ modelsim.ini
 *.bin
 *.elf
 *.hex
+*.steps
