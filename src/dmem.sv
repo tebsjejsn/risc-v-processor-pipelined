@@ -8,6 +8,12 @@ module dmem(
     typedef logic [31:0] ramtype [63:0];
     ramtype mem;
 
+    initial begin
+        for (int i = 0; i < 64; i = i + 1) begin
+            mem[i] = 32'd0;
+        end
+    end
+
     always_ff @(posedge clk)
         if (MemWrite) 
             mem[A[7:2]] <= wd;
