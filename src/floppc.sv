@@ -6,7 +6,7 @@ module floppc(
     output logic [31:0] q
 );
 
-    always_ff @(posedge clk or posedge reset) begin
+    always_ff @(posedge clk, posedge reset) begin
         if (reset) 
             q <= 32'h80000000;
         else if (en) 

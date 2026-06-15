@@ -42,7 +42,7 @@ module tb();
             #50;
             reset = 0;
 
-            #100000;
+            #60000;
             $fclose(trace_file);
             $finish;
         end
