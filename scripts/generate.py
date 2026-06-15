@@ -1,6 +1,7 @@
 import random
 
 def generate_inputs(filename):
+    # Initial values
     values = """\
     addi x1, x0, 1
     addi x2, x0, 2
@@ -61,7 +62,6 @@ def generate_inputs(filename):
                     b_instr = random.randint(1, 2)
 
                     match b_instr:
-                        # FIX: Added dot (.) for PC-relative branching
                         case 1:
                             f.write(f"\n\tbeq x{r1}, x{r2}, .+{imm}")
                         case 2:
@@ -95,7 +95,6 @@ def generate_inputs(filename):
                     j_instr = random.randint(1, 2)
 
                     match j_instr:
-                        # FIX: Added dot (.) for PC-relative jumping
                         case 1:
                             f.write(f"\n\tjal x{r1}, .+{imm}")
                         case 2:
