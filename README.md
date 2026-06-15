@@ -27,7 +27,7 @@ risc-v-processor-pipelined/
 
 ├── scripts/      # Python scripts
 
-├── src/          # SystemVerilog source files (datapath, control unit, hazard unit)
+├── src/          # SystemVerilog source files
 
 ├── tb/           # Testbench files
 
@@ -90,7 +90,7 @@ vsim -voptargs="+acc" work.tb
 ### 1. Insert New Instructions
 - Write a new assembly program in `instructions/test.S`, or use `generate.py` to produce a random valid instruction sequence:
 ```bash
-python3 scripts/generate.py > instructions/test.S
+python3 scripts/generate.py
 ```
 
 ### 2. Repeat Steps
