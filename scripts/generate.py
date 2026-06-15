@@ -14,7 +14,7 @@ def generate_inputs(filename):
     with open(filename, "w") as f:
         f.write(values)
 
-        for instr in range(100):
+        for instr in range(1000):
             r1 = random.randint(1, 7)
             r2 = random.randint(1, 7)
             r3 = random.randint(1, 7)
@@ -55,7 +55,7 @@ def generate_inputs(filename):
                 case 4:
                     imm = random.randint(1, 3) * 4
 
-                    if imm > 100 * 4:
+                    if imm > 1000 * 4:
                         continue
 
                     b_instr = random.randint(1, 2)
@@ -89,7 +89,7 @@ def generate_inputs(filename):
                 case 6:
                     imm = random.randint(1, 2) * 4
 
-                    if imm > 100 * 4:
+                    if imm > 1000 * 4:
                         continue
 
                     j_instr = random.randint(1, 2)

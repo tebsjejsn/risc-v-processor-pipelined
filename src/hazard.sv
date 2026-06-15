@@ -36,7 +36,7 @@ module hazard(
             FrwdBE = '0;
 
         // Stalling logic
-        if (ResultSrcE[0] == 1 && (Rs1D == RdE || Rs2D == RdE)) 
+        if (ResultSrcE[0] == 1 && (RdE != 0) && (Rs1D == RdE || Rs2D == RdE)) 
             lwStall = 1;
         else
             lwStall = 0;

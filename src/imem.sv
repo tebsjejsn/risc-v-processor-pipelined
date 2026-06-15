@@ -8,5 +8,5 @@ module imem(
     // add appropriate text file
     initial $readmemh("C:/Users/tejpa/risc-v-processor-pipelined/instructions/test.hex", mem);
 
-    assign rd = mem[A[31:2]];
+    assign rd = mem[A[11:2]];
 endmodule

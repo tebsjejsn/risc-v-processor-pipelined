@@ -34,7 +34,7 @@ def parse_spike_logs(spike_file):
                 match = pattern.search(line)
 
                 if match:
-                    PC = int(match.group(1), 16) - 0x80000000
+                    PC = int(match.group(1), 16)
                     Reg = int(match.group(2))
                     Val = int(match.group(3), 16)
 

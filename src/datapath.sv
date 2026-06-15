@@ -92,7 +92,7 @@ module datapath(
         .y(PCNext)
     );
 
-    flopre pcreg (
+    floppc pcreg (
         .clk,
         .reset,
         .en(StallF),
@@ -336,9 +336,10 @@ module datapath(
     );
 
     // Control signals
-    flopr #(.width(1)) RegWriteDE (
+    floprc #(.width(1)) RegWriteDE (
         .clk,
         .reset,
+        .clr(FlushE),
         .d(RegWriteD),
         .q(RegWriteE)
     );
@@ -357,30 +358,34 @@ module datapath(
         .q(RegWriteW)
     );
 
-    flopr #(.width(3)) funct3reg (
+    floprc #(.width(3)) funct3reg (
         .clk,
         .reset,
+        .clr(FlushE),
         .d(instrD[14:12]),
         .q(funct3)
     );
 
-    flopr #(.width(1)) BranchDE (
+    floprc #(.width(1)) BranchDE (
         .clk,
         .reset,
+        .clr(FlushE),
         .d(BranchD),
         .q(BranchE)
     );
 
-    flopr #(.width(2)) JumpTypeDE (
+    floprc #(.width(2)) JumpTypeDE (
         .clk,
         .reset,
+        .clr(FlushE),
         .d(JumpTypeD),
         .q(JumpTypeE)
     );
 
-    flopr #(.width(2)) ResultSrcDE (
+    floprc #(.width(2)) ResultSrcDE (
         .clk,
         .reset,
+        .clr(FlushE),
         .d(ResultSrcD),
         .q(ResultSrcE)
     );
@@ -399,9 +404,10 @@ module datapath(
         .q(ResultSrcW)
     );
 
-    flopr #(.width(1)) MemWriteDE (
+    floprc #(.width(1)) MemWriteDE (
         .clk,
         .reset,
+        .clr(FlushE),
         .d(MemWriteD),
         .q(MemWriteE)
     );
@@ -413,16 +419,18 @@ module datapath(
         .q(MemWriteM)
     );
 
-    flopr #(.width(3)) ALUControlDE (
+    floprc #(.width(3)) ALUControlDE (
         .clk,
         .reset,
+        .clr(FlushE),
         .d(ALUControlD),
         .q(ALUControlE)
     );
 
-    flopr #(.width(1)) ALUSrcDE (
+    floprc #(.width(1)) ALUSrcDE (
         .clk,
         .reset,
+        .clr(FlushE),
         .d(ALUSrcD),
         .q(ALUSrcE)
     );

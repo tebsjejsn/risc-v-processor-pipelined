@@ -6,13 +6,8 @@ module dmem(
     output logic [31:0] ReadData
 );
     typedef logic [31:0] ramtype [63:0];
-    ramtype mem;
-
-    initial begin
-        for (int i = 0; i < 64; i = i + 1) begin
-            mem[i] = 32'd0;
-        end
-    end
+    
+    ramtype mem = '{default: 32'd0};
 
     always_ff @(posedge clk)
         if (MemWrite) 

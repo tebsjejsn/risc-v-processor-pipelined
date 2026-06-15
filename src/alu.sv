@@ -8,8 +8,9 @@ module alu(
     logic signed [31:0] A;
     logic signed [31:0] B;
 
-    assign A = signed'(SrcA);
-    assign B = signed'(SrcB);
+    // Swapped signed'() for $signed() to ensure strict simulator compatibility
+    assign A = $signed(SrcA);
+    assign B = $signed(SrcB);
     
     always_comb
         begin
@@ -34,7 +35,7 @@ module alu(
                     ALUResult = {32{1'b0}};
             endcase
 
-            if ((A -B) == 0)
+            if ((A - B) == 0)
                 Zero = 1;
             else
                 Zero = 0;
