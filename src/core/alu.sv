@@ -8,7 +8,6 @@ module alu(
     logic signed [31:0] A;
     logic signed [31:0] B;
 
-    // Swapped signed'() for $signed() to ensure strict simulator compatibility
     assign A = $signed(SrcA);
     assign B = $signed(SrcB);
     
