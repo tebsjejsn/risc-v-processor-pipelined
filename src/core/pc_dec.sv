@@ -6,10 +6,13 @@ module pc_dec(
     output logic [1:0] PCSrc
 );
     always_comb
+        // beq, bne
         if (Branch == '1 && ((Zero == '1 && funct3 == '0) || (Zero == '0 && funct3 == 3'b001)))
             PCSrc = 2'b01;
+        // jal
         else if (JumpType == 2'b01)
             PCSrc = 2'b01;
+        // jalr
         else if (JumpType == 2'b10)
             PCSrc = 2'b10;
         else
