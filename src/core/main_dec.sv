@@ -1,6 +1,6 @@
 module main_dec(
     input  logic [6:0] opcode,
-    input  logic [6:0] funct7,
+    input  logic [2:0] funct3,
     output logic [2:0] ImmType,
     output logic [3:0] ALUSrc,
     output logic [1:0] ResultSrc,
@@ -106,7 +106,7 @@ module main_dec(
                 RegWrite = '0;
                 MemWrite = '0;
                 ResultSrc = 2'b01;
-                ALUSrc = 4'b1000;
+                ALUSrc = 4'b0101;
                 ImmType = 3'b001;
                 Branch = '0;
                 JumpType = '0;
@@ -117,38 +117,27 @@ module main_dec(
                 RegWrite = '0;
                 MemWrite = '1;
                 ResultSrc = '0;
-                ALUSrc = 4'b1000;
+                ALUSrc = 4'b0111;
                 ImmType = 3'b010;
                 Branch = '0;
                 JumpType = '0;
                 FRegWrite = '0;
             end
             7'b1010011: begin
-                case (funct7)
-                    // FPU comparison instructions (feq.s, flt.s)
-                    7'b1010000: begin
-                        RegWrite = '1;
-                        MemWrite = '0;
-                        ResultSrc = 2'b00;
-                        ALUSrc = 4'b0000;
-                        ImmType = '0;
-                        Branch = '0;
-                        JumpType = '0;
-                        FRegWrite = '0;
-                    end
-                    // fcvt.s.w
-                    7'b1101000: begin
+                case (funct3)
+                    // FPU arithhmetic instructions (fadd.s, fsub.s, fmul.s, fdiv.s)
+                    3'b000: begin
                         RegWrite = '0;
                         MemWrite = '0;
                         ResultSrc = 2'b00;
-                        ALUSrc = 4'b0001;
+                        ALUSrc = 4'b0000;
                         ImmType = '0;
                         Branch = '0;
                         JumpType = '0;
                         FRegWrite = '1;
                     end
-                    // fcvt.w.s
-                    7'b1100000: begin
+                    // flt.s instruction
+                    3'b001: begin
                         RegWrite = '1;
                         MemWrite = '0;
                         ResultSrc = 2'b00;
@@ -158,21 +147,29 @@ module main_dec(
                         JumpType = '0;
                         FRegWrite = '0;
                     end
-                    // FPU arithhmetic instructions (fadd.s, fsub.s, fmul.s, fdiv.s)
+                    // feq.s instruction
+                    3'b010: begin
+                        RegWrite = '1;
+                        MemWrite = '0;
+                        ResultSrc = 2'b00;
+                        ALUSrc = 4'b0000;
+                        ImmType = '0;
+                        Branch = '0;
+                        JumpType = '0;
+                        FRegWrite = '0;
+                    end
                     default: begin
                         RegWrite = '0;
                         MemWrite = '0;
-                        ResultSrc = 2'b00;
-                        ALUSrc = 4'b0000;
+                        ResultSrc = '0;
+                        ALUSrc = '0;
                         ImmType = '0;
                         Branch = '0;
                         JumpType = '0;
-                        FRegWrite = '1;
+                        FRegWrite = '0;
                     end
                 endcase
-                
             end
-
             default: begin
                 RegWrite = '0;
                 MemWrite = '0;
