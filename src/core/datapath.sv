@@ -5,7 +5,7 @@ module datapath(
     input  logic [31:0] ReadDataM,
     input  logic        RegWriteD,
     input  logic [2:0]  ImmTypeD,
-    input  logic        ALUSrcD,
+    input  logic [3:0]  ALUSrcD,
     input  logic [2:0]  ALUControlD,
     input  logic [1:0]  ResultSrcD,
     input  logic [1:0]  PCSrc,
@@ -18,6 +18,10 @@ module datapath(
     input  logic        StallD,
     input  logic        FlushE,
     input  logic        FlushD,
+    input  logic [2:0]  FControlD,
+    input  logic        FRegWriteD,
+    input  logic [1:0]  FrwdCE,
+    input  logic [1:0]  FrwdDE,
     output logic [31:0] instrD,
     output logic [2:0]  funct3,
     output logic        BranchE,
@@ -28,6 +32,10 @@ module datapath(
     output logic [31:0] WriteDataM,
     output logic        RegWriteM,
     output logic        RegWriteW,
+    output logic [2:0]  FControlM,
+    output logic [2:0]  FControlW,
+    output logic        FRegWriteM,
+    output logic        FRegWriteW,
     output logic [4:0]  Rs1E,
     output logic [4:0]  Rs2E,
     output logic [31:0] ALUResultM,
@@ -50,11 +58,15 @@ module datapath(
     // Decode variables
     logic [31:0] RD1D;
     logic [31:0] RD2D;
+    logic [31:0] FRD1D;
+    logic [31:0] FRD2D;
     logic [31:0] ImmExtD;
 
     // Decode to execute variables
     logic [31:0] RD1E;
     logic [31:0] RD2E;
+    logic [31:0] FRD1E;
+    logic [31:0] FRD2E;
     logic [31:0] PCE;
     logic [31:0] ImmExtE;
     logic [31:0] PCPlus4E;
@@ -64,6 +76,12 @@ module datapath(
     logic [31:0] ALUSrcA;
     logic [31:0] SrcB;
     logic [31:0] ALUResultE;
+    logic [31:0] FSrcA;
+    logic [31:0] FALUSrcA;
+    logic [31:0] FSrcB;
+    logic [31:0] WriteDataE;
+    logic [31:0] ALUResult;
+    logic [31:0] FALUResult;
 
     // Execute to memory variables
     logic [31:0] PCPlus4M;
@@ -81,7 +99,9 @@ module datapath(
     logic [1:0] ResultSrcW;
     logic       MemWriteE;
     logic [2:0] ALUControlE;
-    logic       ALUSrcE;
+    logic [4:0] ALUSrcE;
+    logic       FRegWriteE;
+    logic [2:0] FControlE;
 
     // Fetch
     mux3 #(.width(32)) pcmux (
@@ -135,7 +155,7 @@ module datapath(
     );
 
     // Decode
-    regfile rf (
+    regfile rf1 (
         .clk,
         .a1(instrD[19:15]),
         .a2(instrD[24:20]),
@@ -146,12 +166,24 @@ module datapath(
         .rd2(RD2D)
     );
 
+    fpu_regfile rf2 (
+        .clk,
+        .a1(instrD[19:15]),
+        .a2(instrD[24:20]),
+        .a3(WriteBackW),
+        .wd3(ResultW),
+        .we3(FRegWriteW),
+        .rd1(FRD1D),
+        .rd2(FRD2D)
+    );
+
     extend ext (
         .instr(instrD[31:7]),
         .immtype(ImmTypeD),
         .immext(ImmExtD)
     );
 
+    // Decode to execute registers
     floprc RD1DE (
         .clk,
         .reset,
@@ -216,6 +248,38 @@ module datapath(
         .q(Rs2E)
     );
 
+    floprc FRD1DE (
+        .clk,
+        .reset,
+        .clr(FlushE),
+        .d(FRD1D),
+        .q(FRD1E)
+    );
+
+    floprc FRD2DE (
+        .clk,
+        .reset,
+        .clr(FlushE),
+        .d(FRD2D),
+        .q(FRD2E)
+    );
+
+    floprc #(.width(3)) FControlDE (
+        .clk,
+        .reset,
+        .clr(FlushE),
+        .d(FControlD),
+        .q(FControlE)
+    );
+
+    floprc #(.width(1)) FRegWriteDE (
+        .clk,
+        .reset,
+        .clr(FlushE),
+        .d(FRegWriteD),
+        .q(FRegWriteE)
+    );
+
     // Execute
     mux3 #(.width(32)) alumux1 (
         .d0(RD1E),
@@ -233,10 +297,10 @@ module datapath(
         .y(ALUSrcA)
     );
 
-    mux2 #(.width(32)) alusrcmux (
+    mux2 #(.width(32)) alusrc1mux (
         .d0(ALUSrcA),
         .d1(ImmExtE),
-        .s(ALUSrcE),
+        .s(ALUSrcE[1]),
         .y(SrcB)
     );
 
@@ -245,13 +309,55 @@ module datapath(
         .SrcB,
         .ALUControl(ALUControlE),
         .Zero,
-        .ALUResult(ALUResultE)
+        .ALUResult(ALUResult)
     );
 
     adder pctargetadder (
         .a(PCE),
         .b(ImmExtE),
         .y(PCTargetE)
+    );
+
+    mux3 #(.width(32)) alumux3 (
+        .d0(FRD1E),
+        .d1(ALUResultM),
+        .d2(ResultW),
+        .s(FrwdCE),
+        .y(FSrcA)
+    );
+
+    mux3 #(.width(32)) alumux4 (
+        .d0(FRD2E),
+        .d1(ALUResultM),
+        .d2(ResultW),
+        .s(FrwdDE),
+        .y(FALUSrcA)
+    );
+
+    mux2 #(.width(32)) alusrc2mux (
+        .d0(FALUSrcA),
+        .d1(ImmExtE),
+        .s(ALUSrcE[0]),
+        .y(FSrcB)
+    );
+
+    // FINISH FALU
+    falu FPUALU (
+
+    );
+
+    mux2 #(.width(32)) writealu (
+        .d0(FALUSrcA),
+        .d1(ALUSrcA),
+        .s(ALUSrcE[2]),
+        .y(WriteDataE)
+    );
+
+    mux2 #(.width(32)) aluresultalu (
+        .d0(FALUResult),
+        .d1(ALUResult),
+        .s(ALUSrcE[3]),
+        .y(ALUResultE)
     );
 
     // Execute to memory registers
@@ -265,7 +371,7 @@ module datapath(
     flopr WriteDataEM (
         .clk,
         .reset,
-        .d(ALUSrcA),
+        .d(WriteDataE),
         .q(WriteDataM)
     );
 
@@ -288,6 +394,20 @@ module datapath(
         .reset,
         .d(PCE),
         .q(PCM)
+    );
+
+    flopr #(.width(3)) FControlEM (
+        .clk,
+        .reset,
+        .d(FControlE),
+        .q(FControlM)
+    );
+
+    flopr #(.width(1)) FRegWriteEM (
+        .clk,
+        .reset,
+        .d(FRegWriteE),
+        .q(FRegWriteM)
     );
 
     // Memory to write back registers
@@ -324,6 +444,20 @@ module datapath(
         .reset,
         .d(PCM),
         .q(PCW)
+    );
+
+    flopr #(.width(1)) FRegWriteMW (
+        .clk,
+        .reset,
+        .d(FRegWriteM),
+        .q(FRegWriteW)
+    );
+
+    flopr #(.width(3)) FControlMW (
+        .clk,
+        .reset,
+        .d(FControlM),
+        .q(FControlW)
     );
 
     // Write back
@@ -427,7 +561,7 @@ module datapath(
         .q(ALUControlE)
     );
 
-    floprc #(.width(1)) ALUSrcDE (
+    floprc #(.width(4)) ALUSrcDE (
         .clk,
         .reset,
         .clr(FlushE),

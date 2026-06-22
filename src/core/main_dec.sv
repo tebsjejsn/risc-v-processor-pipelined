@@ -16,7 +16,7 @@ module main_dec(
             // lw instruction
             7'b0000011: begin
                 RegWrite = '1;
-                ALUSrc = 4'b0101;
+                ALUSrc = 4'b1110;
                 MemWrite = '0;
                 ResultSrc = 2'b01;
                 ImmType = 3'b001;
@@ -27,7 +27,7 @@ module main_dec(
             // sw instruction
             7'b0100011: begin
                 RegWrite = '0;
-                ALUSrc = 4'b0111;
+                ALUSrc = 4'b1110;
                 MemWrite = '1;
                 ResultSrc = '0;
                 ImmType = 3'b010;
@@ -38,7 +38,7 @@ module main_dec(
             // i-type instructions (addi, xori, ori, andi, slti)
             7'b0010011: begin
                 RegWrite = '1;
-                ALUSrc = 4'b0101;
+                ALUSrc = 4'b1110;
                 MemWrite = '0;
                 ResultSrc = '0;
                 ImmType = 3'b001;
@@ -49,7 +49,7 @@ module main_dec(
             // b-type instructions (beq, bne)
             7'b1100011: begin
                 RegWrite = '0;
-                ALUSrc = 4'b0001;
+                ALUSrc = 4'b1100;
                 MemWrite = '0;
                 ResultSrc = '0;
                 ImmType = 3'b011;
@@ -60,7 +60,7 @@ module main_dec(
             // r-type instructions (add, sub, xor, or, and, slt)
             7'b0110011: begin
                 RegWrite = '1;
-                ALUSrc = 4'b0001;
+                ALUSrc = 4'b1100;
                 MemWrite = '0;
                 ResultSrc = '0;
                 ImmType = '0;
@@ -73,7 +73,7 @@ module main_dec(
                 RegWrite = '1;
                 MemWrite = '0;
                 ResultSrc = 2'b10;
-                ALUSrc = 4'b0101;
+                ALUSrc = 4'b1100;
                 ImmType = 3'b100;
                 Branch = '0;
                 JumpType = 2'b01;
@@ -84,7 +84,7 @@ module main_dec(
                 RegWrite = '1;
                 MemWrite = '0;
                 ResultSrc = 2'b10;
-                ALUSrc = 4'b0101;
+                ALUSrc = 4'b1110;
                 ImmType = 3'b001;
                 Branch = '0;
                 JumpType = 2'b10;
@@ -95,7 +95,7 @@ module main_dec(
                 RegWrite = '1;
                 MemWrite = '0;
                 ResultSrc = 2'b00;
-                ALUSrc = 4'b0101;
+                ALUSrc = 4'b1110;
                 ImmType = 3'b101;
                 Branch = '0;
                 JumpType = '0;
@@ -106,7 +106,7 @@ module main_dec(
                 RegWrite = '0;
                 MemWrite = '0;
                 ResultSrc = 2'b01;
-                ALUSrc = 4'b0101;
+                ALUSrc = 4'b1110;
                 ImmType = 3'b001;
                 Branch = '0;
                 JumpType = '0;
@@ -117,7 +117,7 @@ module main_dec(
                 RegWrite = '0;
                 MemWrite = '1;
                 ResultSrc = '0;
-                ALUSrc = 4'b0111;
+                ALUSrc = 4'b1010;
                 ImmType = 3'b010;
                 Branch = '0;
                 JumpType = '0;

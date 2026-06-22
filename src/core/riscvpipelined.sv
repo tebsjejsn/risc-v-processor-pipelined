@@ -21,6 +21,8 @@ module riscvpipelined(
     logic        MemWriteD;
     logic [1:0]  FrwdAE;
     logic [1:0]  FrwdBE;
+    logic [1:0]  FrwdCE;
+    logic [1:0]  FrwdDE;
     logic        BranchD;
     logic [1:0]  JumpTypeD;
     logic [31:0] instrD;
@@ -37,6 +39,12 @@ module riscvpipelined(
     logic        FlushE;
     logic [1:0]  ResultSrcE;
     logic [4:0]  RdE;
+    logic [2:0]  FControlD;
+    logic        FRegWriteD;
+    logic [2:0]  FControlM;
+    logic [2:0]  FControlW;
+    logic        FRegWriteM;
+    logic        FRegWriteW;
     logic        Zero;
 
     datapath dp (
@@ -59,6 +67,10 @@ module riscvpipelined(
         .StallD,
         .FlushD,
         .FlushE,
+        .FControlD,
+        .FRegWriteD,
+        .FrwdCE,
+        .FrwdDE,
         .instrD,
         .funct3,
         .BranchE,
@@ -69,6 +81,10 @@ module riscvpipelined(
         .WriteDataM,
         .RegWriteM,
         .RegWriteW,
+        .FControlM,
+        .FControlW,
+        .FRegWriteM,
+        .FRegWriteW,
         .Rs1E,
         .Rs2E,
         .ALUResultM,
@@ -82,20 +98,23 @@ module riscvpipelined(
 
     main_dec m_decoder (
         .opcode(instrD[6:0]),
+        .funct3(instrD[14:12]),
         .ImmType(ImmTypeD),
         .ALUSrc(ALUSrcD),
         .ResultSrc(ResultSrcD),
         .MemWrite(MemWriteD),
         .JumpType(JumpTypeD),
         .Branch(BranchD),
-        .RegWrite(RegWriteD)
+        .RegWrite(RegWriteD),
+        .FRegWrite(FRegWriteD)
     );
 
     alu_dec alu_decoder (
         .funct3(instrD[14:12]),
         .funct7(instrD[31:25]),
         .opcode(instrD[6:0]),
-        .ALUControl(ALUControlD)
+        .ALUControl(ALUControlD),
+        .FControl(FControlD)
     );
 
     pc_dec pc_decoder (
@@ -118,8 +137,14 @@ module riscvpipelined(
         .RdE,
         .ResultSrcE,
         .PCSrc,
+        .FControlM,
+        .FControlW,
+        .FRegWriteM,
+        .FRegWriteW,
         .FrwdAE,
         .FrwdBE,
+        .FrwdCE,
+        .FrwdDE,
         .StallF,
         .StallD,
         .FlushE,
