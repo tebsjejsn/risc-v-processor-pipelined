@@ -81,7 +81,7 @@ module datapath(
     logic [31:0] FSrcB;
     logic [31:0] WriteDataE;
     logic [31:0] ALUResult;
-    logic [31:0] FALUResult;
+    logic [31:0] FPUResult;
 
     // Execute to memory variables
     logic [31:0] PCPlus4M;
@@ -341,9 +341,11 @@ module datapath(
         .y(FSrcB)
     );
 
-    // FINISH FALU
-    falu FPUALU (
-
+    fpu FPU (
+        .FSrcA,
+        .FSrcB,
+        .FControl(FControlE),
+        .FPUResult
     );
 
     mux2 #(.width(32)) writealu (
@@ -354,7 +356,7 @@ module datapath(
     );
 
     mux2 #(.width(32)) aluresultalu (
-        .d0(FALUResult),
+        .d0(FPUResult),
         .d1(ALUResult),
         .s(ALUSrcE[3]),
         .y(ALUResultE)
